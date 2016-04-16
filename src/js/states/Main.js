@@ -1,4 +1,4 @@
-import { State } from 'phaser';
+import { Camera, State } from 'phaser';
 
 import { totalSections } from '../config';
 
@@ -6,6 +6,23 @@ export default class extends State {
     create() {
         const sectionList = this._generateSectionList(4);
         this._loadSectionList(sectionList);
+
+        for (var i = 0; i < this.game.world.height; i += 100)
+        {
+            this.game.add.text(1, i, i);
+        }
+
+
+        let start_x = this.game.world.centerX;
+        let start_y = (this.game.world.height / 10) * 9;
+
+        this.boat = this.game.add.text(start_x, start_y , 'B');
+        this.boat.anchor.x = 0.5;
+        this.boat.speed = 1;
+
+        this.game.camera.follow(this.boat, Camera.FOLLOW_LOCKON);
+
+        this.cursors = this.game.input.keyboard.createCursorKeys();
     }
 
     _generateSectionList(len = 1) {
@@ -28,6 +45,23 @@ export default class extends State {
             layer.y = lastLayerPosY;
 
             lastLayerPosY += map.height * 16 - 1;
+        }
+    }
+
+    update() {
+        if (this.cursors.up.isDown && !this.debounceUp) {
+            this.boat.speed += 1;
+            console.log('blub');
+            this.debounceUp = true;
+        } else if (this.cursors.up.isUp) {
+            this.debounceUp = false;
+        }
+        if (this.boat.y > 10) {
+            console.log(this.boat.x);
+            console.log(this.boat.y);
+            this.boat.y -= this.boat.speed;
+        } else {
+            // console.log("arrived at top");
         }
     }
 }
