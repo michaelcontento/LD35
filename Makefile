@@ -24,15 +24,19 @@ node_modules/: package.json
 	npm --loglevel=error install > /dev/null
 	touch $@
 
+vendor/phaser/package.json:
+	echo "> Fetching vendor/phaser ..."
+	git submodule update --quiet --init vendor/phaser
+
 vendor/phaser/dist/: vendor/phaser/package.json
 	echo "> Installing vendor/phaser ..."
-	git submodule update --init vendor/phaser
 	cd vendor/phaser \
 		&& npm --loglevel=error install --ignore-scripts > /dev/null \
 		&& npm --loglevel=error install --ignore-scripts grunt-cli > /dev/null \
 		&& rm -rf dist/modules
+	touch $@
 
-vendor/phaser/dist/phaser.js: vendor/phaser/
+vendor/phaser/dist/phaser.js: vendor/phaser/dist/
 	echo "> Building vendor/phaser ..."
 	cd vendor/phaser \
 		&& $(BIN)/grunt custom \
