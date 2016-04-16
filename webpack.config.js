@@ -9,6 +9,7 @@ module.exports = {
     entry: {
         game: [path.join(__dirname, 'src', 'js')]
     },
+    devtool: 'eval-source-map',
     output: {
         path: path.join(__dirname, 'cordova', 'www', 'js'),
         publicPath: '/js',
