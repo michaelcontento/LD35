@@ -6,8 +6,8 @@ import MainState from './states/Main';
 
 export default class Game extends Phaser.Game {
     constructor() {
-        let width = window.innerWidth;
-        let height = window.innerHeight;
+        let width = 400;
+        let height = 734;
 
         super({ width, height, renderer: Phaser.AUTO, parent: 'content', resolution: window.devicePixelRatio });
 

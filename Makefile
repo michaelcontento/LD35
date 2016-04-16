@@ -61,7 +61,11 @@ node_modules/pixi.js/: vendor/phaser/dist/phaser.js
 #
 
 _build: clean install vendor/phaser/dist/phaser.js
-	cp -rf src/index.html cordova/www/
+	mkdir -p cordova/www
+	cd cordova/www \
+		&& ln -s ../../src/maps \
+		&& ln -s ../../src/images \
+		&& ln -s ../../src/index.html
 
 build: _build ## Build project
 	echo "> Building ($${NODE_ENV}) ..."
