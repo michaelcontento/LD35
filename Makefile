@@ -34,7 +34,7 @@ vendor/phaser/dist/: vendor/phaser/package.json
 		&& npm --loglevel=error install --ignore-scripts > /dev/null \
 		&& npm --loglevel=error install --ignore-scripts grunt-cli > /dev/null \
 		&& rm -rf dist/modules
-	touch $@
+	mkdir -p $@ && touch $@
 
 vendor/phaser/dist/phaser.js: vendor/phaser/dist/
 	echo "> Building vendor/phaser ..."
