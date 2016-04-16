@@ -15,6 +15,7 @@ export default class extends State {
         this.load.image('circle', 'images/circle.png');
         this.load.image('cross', 'images/cross.png');
         this.load.image('plus', 'images/plus.png');
+        this.load.image('restart', 'images/restart.png');
     }
 
     create() {

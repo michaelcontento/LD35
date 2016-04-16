@@ -39,6 +39,9 @@ class Attractor extends Sprite {
 
         this.shape = shape;
         this.strength = 100;
+
+        this.game.physics.enable(this, Physics.ARCADE);
+        this.body.immovable = true;
     }
 }
 
@@ -107,7 +110,54 @@ export default class extends State {
         return sorted[0];
     }
 
+    _restart() {
+        this.state.start('Main');
+    }
+
+    _collisionHandler (obj1, obj2) {
+        this.game.stage.backgroundColor = '#992d2d';
+        const message = this.game.add.text(
+            this.game.world.centerY,
+            this.game.world.centerY,
+            'DESTROYED BY IMPACT :(',
+        );
+        message.anchor.x = 1;
+        const button = this.game.add.button(
+            message.width * -0.5,
+            message.height,
+            'restart',
+            this._restart,
+            this
+        );
+        button.scale.setTo(0.3);
+        message.addChild(button);
+    }
+
+    _winHandler() {
+        this.game.stage.backgroundColor = '#4CBB17';
+        const message = this.game.add.text(
+            this.game.world.centerY,
+            this.game.world.centerY,
+            'YOU ARE A WINNER :)',
+        );
+        message.anchor.x = 1;
+        const button = this.game.add.button(
+            message.width * -0.5,
+            message.height,
+            'restart',
+            this._restart,
+            this
+        );
+        button.scale.setTo(0.3);
+        message.addChild(button);
+
+        this.boat.body.velocity.x = 0;
+        this.boat.body.velocity.y = 0;
+    }
+
     update() {
+        this.game.physics.arcade.collide(this.boat, this.attractors, this._collisionHandler, null, this)
+
         if (this.spaceBar.isDown && !this.debounceSpace) {
             console.log('SHIFT');
             if (this.boat.shape === SHAPE_CROSS) {
@@ -121,6 +171,7 @@ export default class extends State {
         }
 
         const closestAttractor = this._closestAttractor(this.boat, this.attractors);
+
         if (closestAttractor) {
             console.log(closestAttractor.shape);
             // this.boat.rotation =
@@ -139,8 +190,7 @@ export default class extends State {
                 100
             );
         } else {
-            this.boat.body.velocity.x = 0;
-            this.boat.body.velocity.y = 0;
+            this._winHandler();
         }
     }
 
