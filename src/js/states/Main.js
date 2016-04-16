@@ -1,41 +1,49 @@
 import { Camera, State, Text, Keyboard, Sprite, Group, Point, Physics} from 'phaser';
 
-import { totalSections } from '../config';
-
 const SHAPE_CROSS = Symbol.for('+');
 const SHAPE_CIRCLE = Symbol.for('o');
 
-class Boat extends Text {
+const SHAPE_MAP = {
+    [SHAPE_CROSS]: 'cross',
+    [SHAPE_CIRCLE]: 'circle',
+}
+
+class Boat extends Sprite {
     constructor(...args) {
         super(...args);
 
-        this.speed = 0;
-        this.shape = SHAPE_CROSS;
+        this.scale.setTo(0.5, 0.5);
 
+        this.shape = SHAPE_CROSS;
         this.game.physics.enable(this, Physics.ARCADE);
+        this.text = new Text(
+            this.game,
+            this.body.centerX,
+            this.body.centerY,
+            Symbol.keyFor(this.shape)
+        );
+        this.addChild(this.text);
     }
 
     update() {
         super.update();
-        this.setText(`B\n${Symbol.keyFor(this.shape)}\nB`);
+        this.text.setText(Symbol.keyFor(this.shape));
     }
 }
 
-class Attractor extends Text {
-    constructor(shape, ...args) {
-        super(...args);
+class Attractor extends Sprite {
+    constructor(shape, game, x, y, key, ...args) {
+        super(game, x, y, SHAPE_MAP[shape], ...args);
+
+        this.scale.setTo(0.5, 0.5);
 
         this.shape = shape;
-        this.setText(Symbol.keyFor(shape));
         this.strength = 100;
     }
 }
 
 export default class extends State {
     create() {
-        // const sectionList = this._generateSectionList(4);
-        // this._loadSectionList(sectionList);
-
         this.game.physics.startSystem(Physics.ARCADE);
 
         this.stage.backgroundColor = '#63D1F4';
@@ -49,9 +57,9 @@ export default class extends State {
         let start_y = (this.game.world.height / 10) * 9;
 
         this.boat = this.game.add.existing(
-            new Boat(this.game, start_x, start_y, 'B')
+            new Boat(this.game, start_x, start_y, 'boat')
         );
-        this.boat.anchor.x = 0.5;
+        // this.boat.anchor.x = 0.5;
 
         this.game.camera.follow(this.boat, Camera.FOLLOW_LOCKON);
 
@@ -62,35 +70,12 @@ export default class extends State {
 
         this.attractors = [
             this.game.add.existing(
-                new Attractor(SHAPE_CROSS, this.game, 32, 450, '?')
+                new Attractor(SHAPE_CROSS, this.game, 16, 450)
             ),
             this.game.add.existing(
-                new Attractor(SHAPE_CIRCLE, this.game, 368, 250, '?')
+                new Attractor(SHAPE_CIRCLE, this.game, 333, 250)
             )
         ]
-    }
-
-    _generateSectionList(len = 1) {
-        const sections = ['start'];
-        while (sections.length <= len) {
-            const nbr = this.rnd.integerInRange(1, totalSections);
-            sections.unshift(`section-${nbr}`);
-        }
-        return sections;
-    }
-
-    _loadSectionList(sectionList) {
-        let lastLayerPosY = 0;
-        for (const sectionName of sectionList) {
-            const map = this.game.add.tilemap(sectionName);
-            map.addTilesetImage('roguelikeSheet_transparent', 'roguelikeSheet_transparent');
-
-            const layer = map.createLayer(map.layer.name);
-            layer.fixedToCamera = false;
-            layer.y = lastLayerPosY;
-
-            lastLayerPosY += map.height * 16 - 1;
-        }
     }
 
     _closestAttractor(boat, attractors) {
@@ -135,15 +120,6 @@ export default class extends State {
             this.debounceSpace = false;
         }
 
-
-        // if (this.cursors.up.isDown && !this.debounceUp) {
-        //     console.log('ACCELERATE');
-        //     this.boat.speed += 1;
-        //     this.debounceUp = true;
-        // } else if (this.cursors.up.isUp && this.debounceUp) {
-        //     this.debounceUp = false;
-        // }
-
         const closestAttractor = this._closestAttractor(this.boat, this.attractors);
         if (closestAttractor) {
             console.log(closestAttractor.shape);
@@ -155,7 +131,7 @@ export default class extends State {
                 closestAttractor.strength
             );
         } else if (this.boat.y > 10){
-            // this.boat.rotation = 
+            // this.boat.rotation =
             this.game.physics.arcade.moveToXY(
                 this.boat,
                 this.boat.x,
@@ -170,6 +146,5 @@ export default class extends State {
 
     render() {
         this.game.debug.text('space bar to shift shape', 32, 32);
-        // this.game.debug.text('cursor up (repeatedly) to accelerate', 32, 64);
     }
 }

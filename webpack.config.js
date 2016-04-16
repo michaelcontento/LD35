@@ -9,7 +9,6 @@ module.exports = {
     entry: {
         game: [path.join(__dirname, 'src', 'js')]
     },
-    devtool: 'eval-source-map',
     output: {
         path: path.join(__dirname, 'cordova', 'www', 'js'),
         publicPath: '/js',
@@ -21,6 +20,7 @@ module.exports = {
         inline: true,
         // host: '192.168.1.145'
     },
+    devtool: 'eval-source-map',
     plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.NoErrorsPlugin(),
@@ -52,4 +52,5 @@ if (isProduction) {
             compress: { warnings: false },
             comments: false
         }));
+    module.exports.devtool = null;
 }

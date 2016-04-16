@@ -10,6 +10,11 @@ export default class extends State {
         for (let i = 1; i <= totalSections; i++) {
             this.load.tilemap(`section-${i}`, `maps/section-${i}.json`, null, Tilemap.TILED_JSON);
         }
+
+        this.load.image('boat', 'images/boat.png');
+        this.load.image('circle', 'images/circle.png');
+        this.load.image('cross', 'images/cross.png');
+        this.load.image('plus', 'images/plus.png');
     }
 
     create() {
