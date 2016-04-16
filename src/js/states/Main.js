@@ -7,6 +7,8 @@ export default class extends State {
         const sectionList = this._generateSectionList(4);
         this._loadSectionList(sectionList);
 
+        this.stage.backgroundColor = '#ef3d47';
+
         for (var i = 0; i < this.game.world.height; i += 100)
         {
             this.game.add.text(1, i, i);
