@@ -1,6 +1,28 @@
-import { Camera, State } from 'phaser';
+import { Camera, State, Text, Keyboard, Sprite, Group} from 'phaser';
 
 import { totalSections } from '../config';
+
+const SHAPE_CROSS = Symbol('+');
+const SHAPE_CIRCLE = Symbol('o');
+
+class Boat extends Text {
+    constructor(...args) {
+        super(...args);
+
+        this.speed = 0;
+        this.shape = SHAPE_CROSS;
+    }
+
+    update() {
+        super.update();
+
+        if (this.shape === SHAPE_CROSS) {
+            this.setText('B\n+\nB');
+        } else if (this.shape === SHAPE_CIRCLE) {
+            this.setText('B\no\nB');
+        }
+    }
+}
 
 export default class extends State {
     create() {
@@ -14,17 +36,20 @@ export default class extends State {
             this.game.add.text(1, i, i);
         }
 
-
         let start_x = this.game.world.centerX;
         let start_y = (this.game.world.height / 10) * 9;
 
-        this.boat = this.game.add.text(start_x, start_y , 'B');
+        this.boat = this.game.add.existing(
+            new Boat(this.game, start_x, start_y, 'B')
+        );
         this.boat.anchor.x = 0.5;
-        this.boat.speed = 1;
 
         this.game.camera.follow(this.boat, Camera.FOLLOW_LOCKON);
 
         this.cursors = this.game.input.keyboard.createCursorKeys();
+        this.spaceBar = this.game.input.keyboard.addKey(Keyboard.SPACEBAR);
+        this.debounceUp = false;
+        this.debounceSpace = false;
     }
 
     _generateSectionList(len = 1) {
@@ -51,19 +76,35 @@ export default class extends State {
     }
 
     update() {
+        if (this.spaceBar.isDown && !this.debounceSpace) {
+            console.log('SHIFT');
+            if (this.boat.shape === SHAPE_CROSS) {
+                this.boat.shape = SHAPE_CIRCLE;
+            } else {
+                this.boat.shape = SHAPE_CROSS;
+            }
+            this.debounceSpace = true;
+        } else if (this.spaceBar.isUp && this.debounceSpace) {
+            this.debounceSpace = false;
+        }
+
         if (this.cursors.up.isDown && !this.debounceUp) {
+            console.log('ACCELERATE');
             this.boat.speed += 1;
-            console.log('blub');
             this.debounceUp = true;
-        } else if (this.cursors.up.isUp) {
+        } else if (this.cursors.up.isUp && this.debounceUp) {
             this.debounceUp = false;
         }
+        // console.log(this.boat.x);
+        // console.log(this.boat.y);
         if (this.boat.y > 10) {
-            console.log(this.boat.x);
-            console.log(this.boat.y);
             this.boat.y -= this.boat.speed;
-        } else {
-            // console.log("arrived at top");
+        // } else {
+        //     console.log("arrived at top");
         }
+    }
+
+    render() {
+        this.game.debug.text('space bar to shift shape', 32, 32);
     }
 }
