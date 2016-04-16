@@ -1,0 +1,5 @@
+# make build
+/cordova/www/
+
+# make install
+/node_modules/
