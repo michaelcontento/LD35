@@ -105,22 +105,25 @@ export default class extends State {
             return null;
         }
 
-        const relevant = attractors.filter(
-            (attractor) => attractor.y < boat.y
-        ).filter(
-            (attractor) => attractor.shape === boat.shape
-        );
-        if (relevant.length == 0) {
-            return null;
-        } else if (relevant.length == 1) {
-            return relevant[0];
-        }
-
-        const sorted = attractors.map(
+        const relevant = attractors.map(
             (attractor) => (
                 { distance: boat.body.center.distance(attractor), attractor }
             )
-        ).sort(
+        ).filter(
+            ({attractor}) => attractor.y < boat.y
+        ).filter(
+            ({attractor}) => attractor.shape === boat.shape
+        ).filter(
+            ({distance, attractor}) => distance < attractor.range
+        );
+
+        if (relevant.length == 0) {
+            return null;
+        } else if (relevant.length == 1) {
+            return relevant[0].attractor;
+        }
+
+        const sorted = attractors.sort(
             ({distance: distA}, {distance: distB}) => distA - distB
         ).map(
             ({attractor}) => attractor

@@ -10,7 +10,9 @@ export default class Attractor extends Sprite {
         this.anchor.setTo(0.5);
 
         this.shape = shape;
+
         this.strength = 100;
+        this.range = 384;
 
         this.game.physics.enable(this, Physics.ARCADE);
         this.body.immovable = true;
