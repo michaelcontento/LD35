@@ -5,4 +5,5 @@
 /node_modules/
 
 # devi generated
-/src/game/
+# /src/game/
+# NOTE: Enabled as long as devi is integrated into the build process
