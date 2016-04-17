@@ -5,9 +5,11 @@ export default class extends State {
         this.game.scale.scaleMode = ScaleManager.SHOW_ALL;
         this.game.scale.pageAlignHorizontally = true;
         this.game.scale.pageAlignVertically = true;
+
+        this.state.start('Splash');
     }
 
     preload() {
-        this.state.start('Splash');
+        this.load.json('game', 'game/game.json');
     }
 }
