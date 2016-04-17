@@ -9,6 +9,7 @@ export default class Boat extends Sprite {
         this.scale.setTo(0.5);
         this.anchor.setTo(0.5);
 
+        this.treasure = 0;
         this.shape = Shapes.SHAPE_CIRCLE;
         this.game.physics.enable(this, Physics.ARCADE);
         this.text = new Text(

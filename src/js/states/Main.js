@@ -4,6 +4,8 @@ import Attractor from '../models/Attractor';
 import Boat from '../models/Boat';
 import Obstacle from '../models/Obstacle';
 import * as Shapes from '../models/Shapes'
+import Treasure from '../models/Treasure';
+
 
 const COLOUR_WATER = '#63D1F4';
 const COLOUR_WON = '#4CBB17';
@@ -16,17 +18,20 @@ export default class extends State {
 
         this.stage.backgroundColor = COLOUR_WATER;
 
-        this._addDistanceMarkers(this.game);
+        // add distance markers
+        for (var i = 0; i < this.game.world.height; i += 100) {
+            this.game.add.text(1, i, i, {fill: 'lightgray', fontSize: 16});
+        }
 
         let start_x = this.game.world.centerX;
-        let start_y = (this.game.world.height / 10) * 9;
-
+        let start_y = this.game.world.height * 0.9;
         this.boat = this.game.add.existing(
             new Boat(this.game, start_x, start_y, 'boat')
         );
 
         this.game.camera.follow(this.boat, Camera.FOLLOW_LOCKON);
 
+        // TODO this makes up the "level", refactor out?!
         this.attractors = [
             this.game.add.existing(
                 new Attractor(Shapes.SHAPE_CROSS, this.game, this.game.world.width * 0.1, 450)
@@ -43,19 +48,34 @@ export default class extends State {
                 new Obstacle(this.game, this.game.world.centerX / 4, 150, 'volcano')
             ),
         ]
+        this.treasures = [
+            this.game.add.existing(
+                new Treasure(this.game, this.game.world.width * 0.7, 200, 'treasure')
+            ),
+            this.game.add.existing(
+                new Treasure(this.game, this.game.world.centerX, 480, 'treasure')
+            ),
+        ]
 
-        const helpText = this.game.add.text(
-            this.game.world.centerX, this.game.world.height - 33,
+        this.treasureCount = this.game.add.text(
+            this.game.width * 0.75, this.game.height * 0.95, `${this.boat.treasure}`
+        );
+        this.treasureCount.anchor.setTo(0.5);
+
+        const treasureCountSprite = this.game.add.sprite(50, 0, 'treasure');
+        treasureCountSprite.scale.setTo(0.33);
+        treasureCountSprite.anchor.setTo(0.5);
+        this.treasureCount.addChild(treasureCountSprite);
+
+        this.helpText = this.game.add.text(
+            this.game.world.width * 0.1, this.game.world.height * 0.92,
             'the shapes attract you!\ntap to shift active shape',
-            {align: 'center', fill: 'white', fontSize: 18},
-        );
-        helpText.anchor.setTo(0.5);
-
-        this.game.input.onTap.add(
-            this._toggleShape,
-            this
+            {align: 'left', fill: 'white', fontSize: 18},
         );
 
+        this.game.input.onTap.add(::this._toggleShape);
+
+        // TODO pause only physics instead?
         this.game.paused = true;
         this.game.input.onTap.addOnce(
             () => this.game.paused = false,
@@ -98,23 +118,8 @@ export default class extends State {
         return sorted[0];
     }
 
-    _restart(event) {
-        this.game.paused = false;
-        this.state.start('Main');
-    }
-
-    _collisionHandler () {
-        console.log('_collisionHandler');
-        this._GameOverMessage(COLOUR_LOST, 'DESTROYED BY IMPACT :(');
-    }
-
-    _winHandler() {
-        console.log('_winHandler');
-        this._GameOverMessage(COLOUR_WON, 'YOU ARE A WINNER :)');
-    }
-
-    _GameOverMessage(backgroundColor, message) {
-        this.game.paused = true;
+    _GameOver(backgroundColor, message) {
+        // this.game.paused = true;
         this.game.physics.arcade.isPaused = true;
 
         this.game.stage.backgroundColor = backgroundColor;
@@ -128,7 +133,7 @@ export default class extends State {
         );
         _message.anchor.x = 1;
 
-        this.game.input.onTap.addOnce(this._restart, this);
+        this.game.input.onTap.addOnce(::this.game.state.restart);
     }
 
     _toggleShape() {
@@ -140,20 +145,28 @@ export default class extends State {
     }
 
     update() {
-        // TODO merge lists instead of calling twice...
-        this.game.physics.arcade.collide(
+        // handle "harmful" collisions first :(
+        const collidesAttr = this.game.physics.arcade.collide(
             this.boat,
-            this.attractors,
-            this._collisionHandler,
-            null,
-            this
+            this.attractors
         );
+        const collidesObst = this.game.physics.arcade.collide(
+            this.boat,
+            this.obstacles
+        );
+        if (collidesAttr || collidesObst) {
+            this._GameOver(COLOUR_LOST, 'DESTROYED BY IMPACT :(');
+        }
+
+        // ... then benefical ones :)
         this.game.physics.arcade.collide(
             this.boat,
-            this.obstacles,
-            this._collisionHandler,
-            null,
-            this
+            this.treasures,
+            (boat, treasure) => {
+                boat.treasure += 1;
+                treasure.kill();
+                this.treasureCount.setText(this.boat.treasure);
+            }
         );
 
         const closestAttractor = this._closestAttractor(this.boat, this.attractors);
@@ -176,7 +189,7 @@ export default class extends State {
                 100
             );
         } else {
-            this._winHandler();
+            this._GameOver(COLOUR_WON, 'YOU ARE A WINNER :)');
         }
     }
 
