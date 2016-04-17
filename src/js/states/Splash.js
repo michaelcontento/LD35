@@ -14,6 +14,7 @@ export default class extends State {
         this.load.image('boat', 'images/boat.png');
         this.load.image('circle', 'images/circle.png');
         this.load.image('cross', 'images/cross.png');
+        this.load.image('finishline', 'images/finishline.png');
         this.load.image('mountain', 'images/mountain.png');
         this.load.image('plus', 'images/plus.png');
         this.load.image('poo', 'images/poo.png');

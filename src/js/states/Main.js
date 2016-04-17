@@ -31,6 +31,17 @@ export default class extends State {
 
         this.game.camera.follow(this.boat, Camera.FOLLOW_LOCKON);
 
+        const finishLine = this.game.add.group();
+        const left = this.game.add.sprite(0, 0, 'finishline');
+        const middle = this.game.add.sprite(this.game.world.centerX, 0, 'finishline');
+        middle.anchor.x = 0.5;
+        const right = this.game.add.sprite(this.game.world.width, 0, 'finishline');
+        right.anchor.x = 1;
+
+        finishLine.addMultiple([left, middle, right]);
+        finishLine.setAll('scale.x', 0.33);
+        finishLine.setAll('scale.y', 0.33);
+
         // TODO this makes up the "level", refactor out?!
         this.attractors = [
             this.game.add.existing(
