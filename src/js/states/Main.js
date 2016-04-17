@@ -81,11 +81,6 @@ export default class extends State {
 
         this.game.camera.follow(this.boat, Camera.FOLLOW_LOCKON);
 
-        this.cursors = this.game.input.keyboard.createCursorKeys();
-        this.spaceBar = this.game.input.keyboard.addKey(Keyboard.SPACEBAR);
-        this.debounceUp = false;
-        this.debounceSpace = false;
-
         this.attractors = [
             this.game.add.existing(
                 new Attractor(SHAPE_CROSS, this.game, this.game.world.width * 0.1, 450)
@@ -105,13 +100,18 @@ export default class extends State {
 
         const helpText = this.game.add.text(
             this.game.world.centerX, this.game.world.height - 33,
-            'the shapes attract you!\nspace bar to shift shape',
+            'the shapes attract you!\ntap to shift active shape',
             {align: 'center', fill: 'white', fontSize: 18},
         );
         helpText.anchor.setTo(0.5);
 
+        this.game.input.onTap.add(
+            this._toggleShape,
+            this
+        );
+
         this.game.paused = true;
-        this.game.input.keyboard.addKey(Keyboard.SPACEBAR).onDown.addOnce(
+        this.game.input.onTap.addOnce(
             () => this.game.paused = false,
             this
         );
@@ -182,8 +182,15 @@ export default class extends State {
         );
         _message.anchor.x = 1;
 
-        // TODO find an "any key" handler instead
         this.game.input.onTap.addOnce(this._restart, this);
+    }
+
+    _toggleShape() {
+        if (this.boat.shape === SHAPE_CROSS) {
+            this.boat.shape = SHAPE_CIRCLE;
+        } else {
+            this.boat.shape = SHAPE_CROSS;
+        }
     }
 
     update() {
@@ -202,18 +209,6 @@ export default class extends State {
             null,
             this
         );
-
-
-        if (this.spaceBar.isDown && !this.debounceSpace) {
-            if (this.boat.shape === SHAPE_CROSS) {
-                this.boat.shape = SHAPE_CIRCLE;
-            } else {
-                this.boat.shape = SHAPE_CROSS;
-            }
-            this.debounceSpace = true;
-        } else if (this.spaceBar.isUp && this.debounceSpace) {
-            this.debounceSpace = false;
-        }
 
         const closestAttractor = this._closestAttractor(this.boat, this.attractors);
 
