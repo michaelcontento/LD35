@@ -64,7 +64,8 @@ _build: clean install vendor/phaser/dist/phaser.js
 	mkdir -p cordova/www
 	cd cordova/www \
 		&& ln -s ../../src/maps \
-		&& ln -s ../../src/images
+		&& ln -s ../../src/images \
+		&& ln -s ../../src/game
 
 build: _build ## Build project
 	echo "> Building ($${NODE_ENV}) ..."
