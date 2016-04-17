@@ -18,7 +18,7 @@ export default class Attractor extends Sprite {
         this.indicator = game.add.sprite(this.centerX, this.height, 'wifi');
         this.indicator.scale.setTo(0.15);
         this.indicator.anchor.x = 0.5;
-        this.indicator.alpha = 0;
+        this.indicator.alpha = 0.25;
         this.indicator.tween = this.game.add.tween(this.indicator).to(
              { alpha: 1 }, 400, Easing.Linear.None, true, 0, 1000, true
         );
