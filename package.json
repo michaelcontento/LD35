@@ -42,5 +42,8 @@
     "webpack-dev-server": "^1.14.1",
     "webpack-split-by-path": "0.0.8",
     "xml2js": "^0.4.16"
+  },
+  "dependencies": {
+    "json-loader": "^0.5.4"
   }
 }
