@@ -8,11 +8,16 @@ const SHAPE_MAP = {
     [SHAPE_CIRCLE]: 'circle',
 }
 
+const COLOUR_WATER = '#63D1F4';
+const COLOUR_WON = '#4CBB17';
+const COLOUR_LOST = '#992D2D';
+
 class Boat extends Sprite {
     constructor(...args) {
         super(...args);
 
         this.scale.setTo(0.5);
+        this.anchor.setTo(0.5);
 
         this.shape = SHAPE_CROSS;
         this.game.physics.enable(this, Physics.ARCADE);
@@ -35,7 +40,8 @@ class Attractor extends Sprite {
     constructor(shape, game, x, y, key, ...args) {
         super(game, x, y, SHAPE_MAP[shape], ...args);
 
-        this.scale.setTo(0.5);
+        this.scale.setTo(0.33);
+        this.anchor.setTo(0.5);
 
         this.shape = shape;
         this.strength = 100;
@@ -50,6 +56,7 @@ class Obstacle extends Sprite {
         super(...args);
 
         this.scale.setTo(0.5);
+        this.anchor.setTo(0.5);
 
         this.game.physics.enable(this, Physics.ARCADE);
         this.body.immovable = true;
@@ -59,8 +66,9 @@ class Obstacle extends Sprite {
 export default class extends State {
     create() {
         this.game.physics.startSystem(Physics.ARCADE);
+        this.game.time.advancedTiming = true;
 
-        this.stage.backgroundColor = '#63D1F4';
+        this.stage.backgroundColor = COLOUR_WATER;
 
         this._addDistanceMarkers(this.game);
 
@@ -80,17 +88,33 @@ export default class extends State {
 
         this.attractors = [
             this.game.add.existing(
-                new Attractor(SHAPE_CROSS, this.game, 16, 450)
+                new Attractor(SHAPE_CROSS, this.game, this.game.world.width * 0.1, 450)
             ),
             this.game.add.existing(
-                new Attractor(SHAPE_CIRCLE, this.game, 333, 250)
+                new Attractor(SHAPE_CIRCLE, this.game, this.game.world.width * 0.9, 250)
             ),
         ]
         this.obstacles = [
             this.game.add.existing(
                 new Obstacle(this.game, this.game.world.centerX, 150, 'volcano')
             ),
+            this.game.add.existing(
+                new Obstacle(this.game, this.game.world.centerX / 4, 150, 'volcano')
+            ),
         ]
+
+        const helpText = this.game.add.text(
+            this.game.world.centerX, this.game.world.height - 33,
+            'the shapes attract you!\nspace bar to shift shape',
+            {align: 'center', fill: 'white', fontSize: 18},
+        );
+        helpText.anchor.setTo(0.5);
+
+        this.game.paused = true;
+        this.game.input.keyboard.addKey(Keyboard.SPACEBAR).onDown.addOnce(
+            () => this.game.paused = false,
+            this
+        );
     }
 
     _addDistanceMarkers(game) {
@@ -129,21 +153,18 @@ export default class extends State {
     }
 
     _restart(event) {
-        console.log(event);
         this.game.paused = false;
-        this.game.physics.arcade.isPaused = false;
-
         this.state.start('Main');
     }
 
-    _collisionHandler (obj1, obj2) {
-        console.log("_collisionHandler");
-        this._GameOverMessage('#992D2D', 'DESTROYED BY IMPACT :(');
+    _collisionHandler () {
+        console.log('_collisionHandler');
+        this._GameOverMessage(COLOUR_LOST, 'DESTROYED BY IMPACT :(');
     }
 
     _winHandler() {
-        console.log("_winHandler");
-        this._GameOverMessage('#4CBB17', 'YOU ARE A WINNER :)');
+        console.log('_winHandler');
+        this._GameOverMessage(COLOUR_WON, 'YOU ARE A WINNER :)');
     }
 
     _GameOverMessage(backgroundColor, message) {
@@ -157,9 +178,11 @@ export default class extends State {
             this.game.world.centerY,
             this.game.world.centerY,
             `${message}\n- tap anywhere to restart -`,
+            {align: 'center'}
         );
         _message.anchor.x = 1;
 
+        // TODO find an "any key" handler instead
         this.game.input.onTap.addOnce(this._restart, this);
     }
 
@@ -182,7 +205,6 @@ export default class extends State {
 
 
         if (this.spaceBar.isDown && !this.debounceSpace) {
-            console.log('SHIFT');
             if (this.boat.shape === SHAPE_CROSS) {
                 this.boat.shape = SHAPE_CIRCLE;
             } else {
@@ -195,6 +217,7 @@ export default class extends State {
 
         const closestAttractor = this._closestAttractor(this.boat, this.attractors);
 
+        // TODO use/fix rotation
         if (closestAttractor) {
             console.log(closestAttractor.shape);
             // this.boat.rotation =
@@ -213,14 +236,11 @@ export default class extends State {
                 100
             );
         } else {
-            // this.boat.body.velocity.x = 0;
-            // this.boat.body.velocity.y = 0;
-
             this._winHandler();
         }
     }
 
     render() {
-        this.game.debug.text('space bar to shift shape', 32, 32);
+        this.game.debug.text(`${this.game.time.fps}fps`, this.game.width - 50, 32);
     }
 }
