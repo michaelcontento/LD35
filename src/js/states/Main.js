@@ -1,67 +1,13 @@
-import { Camera, State, Text, Keyboard, Sprite, Group, Point, Physics} from 'phaser';
+import { Camera, State, Text, Physics } from 'phaser';
 
-const SHAPE_CROSS = Symbol.for('+');
-const SHAPE_CIRCLE = Symbol.for('o');
-
-const SHAPE_MAP = {
-    [SHAPE_CROSS]: 'cross',
-    [SHAPE_CIRCLE]: 'circle',
-}
+import Attractor from '../models/Attractor';
+import Boat from '../models/Boat';
+import Obstacle from '../models/Obstacle';
+import * as Shapes from '../models/Shapes'
 
 const COLOUR_WATER = '#63D1F4';
 const COLOUR_WON = '#4CBB17';
 const COLOUR_LOST = '#992D2D';
-
-class Boat extends Sprite {
-    constructor(...args) {
-        super(...args);
-
-        this.scale.setTo(0.5);
-        this.anchor.setTo(0.5);
-
-        this.shape = SHAPE_CROSS;
-        this.game.physics.enable(this, Physics.ARCADE);
-        this.text = new Text(
-            this.game,
-            this.body.centerX,
-            this.body.centerY,
-            Symbol.keyFor(this.shape)
-        );
-        this.addChild(this.text);
-    }
-
-    update() {
-        super.update();
-        this.text.setText(Symbol.keyFor(this.shape));
-    }
-}
-
-class Attractor extends Sprite {
-    constructor(shape, game, x, y, key, ...args) {
-        super(game, x, y, SHAPE_MAP[shape], ...args);
-
-        this.scale.setTo(0.33);
-        this.anchor.setTo(0.5);
-
-        this.shape = shape;
-        this.strength = 100;
-
-        this.game.physics.enable(this, Physics.ARCADE);
-        this.body.immovable = true;
-    }
-}
-
-class Obstacle extends Sprite {
-    constructor(...args) {
-        super(...args);
-
-        this.scale.setTo(0.5);
-        this.anchor.setTo(0.5);
-
-        this.game.physics.enable(this, Physics.ARCADE);
-        this.body.immovable = true;
-    }
-}
 
 export default class extends State {
     create() {
@@ -83,10 +29,10 @@ export default class extends State {
 
         this.attractors = [
             this.game.add.existing(
-                new Attractor(SHAPE_CROSS, this.game, this.game.world.width * 0.1, 450)
+                new Attractor(Shapes.SHAPE_CROSS, this.game, this.game.world.width * 0.1, 450)
             ),
             this.game.add.existing(
-                new Attractor(SHAPE_CIRCLE, this.game, this.game.world.width * 0.9, 250)
+                new Attractor(Shapes.SHAPE_CIRCLE, this.game, this.game.world.width * 0.9, 250)
             ),
         ]
         this.obstacles = [
@@ -186,10 +132,10 @@ export default class extends State {
     }
 
     _toggleShape() {
-        if (this.boat.shape === SHAPE_CROSS) {
-            this.boat.shape = SHAPE_CIRCLE;
+        if (this.boat.shape === Shapes.SHAPE_CROSS) {
+            this.boat.shape = Shapes.SHAPE_CIRCLE;
         } else {
-            this.boat.shape = SHAPE_CROSS;
+            this.boat.shape = Shapes.SHAPE_CROSS;
         }
     }
 
@@ -214,7 +160,6 @@ export default class extends State {
 
         // TODO use/fix rotation
         if (closestAttractor) {
-            console.log(closestAttractor.shape);
             // this.boat.rotation =
             this.game.physics.arcade.moveToXY(
                 this.boat,
