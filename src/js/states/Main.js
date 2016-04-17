@@ -45,16 +45,24 @@ class Attractor extends Sprite {
     }
 }
 
+class Obstacle extends Sprite {
+    constructor(...args) {
+        super(...args);
+
+        this.scale.setTo(0.5);
+
+        this.game.physics.enable(this, Physics.ARCADE);
+        this.body.immovable = true;
+    }
+}
+
 export default class extends State {
     create() {
         this.game.physics.startSystem(Physics.ARCADE);
 
         this.stage.backgroundColor = '#63D1F4';
 
-        for (var i = 0; i < this.game.world.height; i += 100)
-        {
-            this.game.add.text(1, i, i, {fill: 'lightgray'});
-        }
+        this._addDistanceMarkers(this.game);
 
         let start_x = this.game.world.centerX;
         let start_y = (this.game.world.height / 10) * 9;
@@ -76,8 +84,19 @@ export default class extends State {
             ),
             this.game.add.existing(
                 new Attractor(SHAPE_CIRCLE, this.game, 333, 250)
-            )
+            ),
         ]
+        this.obstacles = [
+            this.game.add.existing(
+                new Obstacle(this.game, this.game.world.centerX, 150, 'volcano')
+            ),
+        ]
+    }
+
+    _addDistanceMarkers(game) {
+        for (var i = 0; i < game.world.height; i += 100) {
+            game.add.text(1, i, i, {fill: 'lightgray', fontSize: 16});
+        }
     }
 
     _closestAttractor(boat, attractors) {
@@ -145,7 +164,22 @@ export default class extends State {
     }
 
     update() {
-        this.game.physics.arcade.collide(this.boat, this.attractors, this._collisionHandler, null, this)
+        // TODO merge lists instead of calling twice...
+        this.game.physics.arcade.collide(
+            this.boat,
+            this.attractors,
+            this._collisionHandler,
+            null,
+            this
+        );
+        this.game.physics.arcade.collide(
+            this.boat,
+            this.obstacles,
+            this._collisionHandler,
+            null,
+            this
+        );
+
 
         if (this.spaceBar.isDown && !this.debounceSpace) {
             console.log('SHIFT');
