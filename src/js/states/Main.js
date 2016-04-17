@@ -183,10 +183,16 @@ export default class extends State {
             }
         );
 
+        // inactivate all attractors (re-active the closest one later)
+        this.attractors.forEach(
+            (attr) => attr.active = false
+        );
+
         const closestAttractor = this._closestAttractor(this.boat, this.attractors);
 
         // TODO use/fix rotation
         if (closestAttractor) {
+            closestAttractor.active = true;
             // this.boat.rotation =
             this.game.physics.arcade.moveToXY(
                 this.boat,

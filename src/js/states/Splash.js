@@ -21,6 +21,7 @@ export default class extends State {
         this.load.image('restart', 'images/restart.png');
         this.load.image('treasure', 'images/treasure.png');
         this.load.image('volcano', 'images/volcano.png');
+        this.load.image('wifi', 'images/wifi.png');
     }
 
     create() {
