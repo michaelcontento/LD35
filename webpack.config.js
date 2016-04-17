@@ -1,6 +1,7 @@
 const path = require('path');
 const SplitByPathPlugin = require('webpack-split-by-path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const env = process.env.NODE_ENV || 'production';
 const isProduction = env === 'production';
@@ -12,7 +13,7 @@ module.exports = {
     output: {
         path: path.join(__dirname, 'cordova', 'www', 'js'),
         publicPath: '/js',
-        filename: `[name].js`,
+        filename: `[name]${isProduction ? '.[chunkhash]' : ''}.js`,
         pathinfo: !isProduction
     },
     devServer: {
@@ -37,6 +38,10 @@ module.exports = {
         }),
         new webpack.ProvidePlugin({
             PIXI: 'pixi.js'
+        }),
+        new HtmlWebpackPlugin({
+            title: 'LD35 - Boats!',
+            filename: '../index.html'
         })
     ],
     module: {
