@@ -12,7 +12,7 @@ class Boat extends Sprite {
     constructor(...args) {
         super(...args);
 
-        this.scale.setTo(0.5, 0.5);
+        this.scale.setTo(0.5);
 
         this.shape = SHAPE_CROSS;
         this.game.physics.enable(this, Physics.ARCADE);
@@ -35,7 +35,7 @@ class Attractor extends Sprite {
     constructor(shape, game, x, y, key, ...args) {
         super(game, x, y, SHAPE_MAP[shape], ...args);
 
-        this.scale.setTo(0.5, 0.5);
+        this.scale.setTo(0.5);
 
         this.shape = shape;
         this.strength = 100;
@@ -62,7 +62,6 @@ export default class extends State {
         this.boat = this.game.add.existing(
             new Boat(this.game, start_x, start_y, 'boat')
         );
-        // this.boat.anchor.x = 0.5;
 
         this.game.camera.follow(this.boat, Camera.FOLLOW_LOCKON);
 
@@ -110,49 +109,39 @@ export default class extends State {
         return sorted[0];
     }
 
-    _restart() {
+    _restart(event) {
+        console.log(event);
+        this.game.paused = false;
+        this.game.physics.arcade.isPaused = false;
+
         this.state.start('Main');
     }
 
     _collisionHandler (obj1, obj2) {
-        this.game.stage.backgroundColor = '#992d2d';
-        const message = this.game.add.text(
-            this.game.world.centerY,
-            this.game.world.centerY,
-            'DESTROYED BY IMPACT :(',
-        );
-        message.anchor.x = 1;
-        const button = this.game.add.button(
-            message.width * -0.5,
-            message.height,
-            'restart',
-            this._restart,
-            this
-        );
-        button.scale.setTo(0.3);
-        message.addChild(button);
+        console.log("_collisionHandler");
+        this._GameOverMessage('#992D2D', 'DESTROYED BY IMPACT :(');
     }
 
     _winHandler() {
-        this.game.stage.backgroundColor = '#4CBB17';
-        const message = this.game.add.text(
-            this.game.world.centerY,
-            this.game.world.centerY,
-            'YOU ARE A WINNER :)',
-        );
-        message.anchor.x = 1;
-        const button = this.game.add.button(
-            message.width * -0.5,
-            message.height,
-            'restart',
-            this._restart,
-            this
-        );
-        button.scale.setTo(0.3);
-        message.addChild(button);
+        console.log("_winHandler");
+        this._GameOverMessage('#4CBB17', 'YOU ARE A WINNER :)');
+    }
 
-        this.boat.body.velocity.x = 0;
-        this.boat.body.velocity.y = 0;
+    _GameOverMessage(backgroundColor, message) {
+        this.game.paused = true;
+        this.game.physics.arcade.isPaused = true;
+
+        this.game.stage.backgroundColor = backgroundColor;
+
+        // TODO align text properly
+        const _message = this.game.add.text(
+            this.game.world.centerY,
+            this.game.world.centerY,
+            `${message}\n- tap anywhere to restart -`,
+        );
+        _message.anchor.x = 1;
+
+        this.game.input.onTap.addOnce(this._restart, this);
     }
 
     update() {
@@ -190,6 +179,9 @@ export default class extends State {
                 100
             );
         } else {
+            // this.boat.body.velocity.x = 0;
+            // this.boat.body.velocity.y = 0;
+
             this._winHandler();
         }
     }
