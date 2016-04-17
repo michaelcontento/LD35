@@ -3,3 +3,6 @@
 
 # make install
 /node_modules/
+
+# devi generated
+/src/game/
