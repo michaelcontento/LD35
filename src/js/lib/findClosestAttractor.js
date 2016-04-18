@@ -3,14 +3,14 @@ export default (boat, attractors) => {
         return null;
     }
 
-    const relevant = attractors.map(
+    const relevant = attractors.filter(
+        (attractor) => attractor.worldPosition.y < boat.worldPosition.y
+    ).filter(
+        (attractor) => attractor.shape === boat.shape
+    ).map(
         (attractor) => (
             { distance: boat.worldPosition.distance(attractor.worldPosition), attractor }
         )
-    ).filter(
-        ({attractor}) => attractor.worldPosition.y < boat.worldPosition.y
-    ).filter(
-        ({attractor}) => attractor.shape === boat.shape
     ).filter(
         ({distance, attractor}) => distance < attractor.range
     );
