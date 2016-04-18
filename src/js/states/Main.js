@@ -153,8 +153,8 @@ export default class extends State {
             // this.boat.rotation =
             this.game.physics.arcade.moveToXY(
                 this.boat,
-                closestAttractor.x,
-                closestAttractor.y,
+                closestAttractor.worldPosition.x,
+                closestAttractor.worldPosition.y,
                 closestAttractor.strength
             );
         } else if (this.boat.y > 10){
