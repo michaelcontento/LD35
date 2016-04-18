@@ -31,8 +31,6 @@ export default class Attractor extends Sprite {
         );
         this.indicator.tween.pause();
         this.addChild(this.indicator);
-
-        console.log(this.x, this.y, this.indicator.x, this.indicator.y);
     }
 
     update() {
