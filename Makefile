@@ -17,23 +17,23 @@ mrproper: clean ## Remove all "non git" files
 # INSTALL
 #
 
-install: node_modules/ node_modules/phaser/ node_modules/pixi.js/ ## Install all required dependencies
+install: node_modules/ node_modules/phaser/ node_modules/devi-phaser/ ## Install all required dependencies
 
 node_modules/: package.json
 	echo "> Installing ..."
 	npm --loglevel=error install > /dev/null
 	touch $@
 
-vendor/phaser/package.json:
-	echo "> Fetching vendor/phaser ..."
-	git submodule update --quiet --init vendor/phaser
+node_modules/phaser/: node_modules/pixi.js/ vendor/phaser/dist/phaser.js
+	echo "> Creating $@ ..."
+	cp vendor/phaser/dist/phaser.js $@/index.js
+	echo '{"main":"index.js"}' > $@/package.json
+	mkdir -p $@ && touch $@
 
-vendor/phaser/dist/: vendor/phaser/package.json
-	echo "> Installing vendor/phaser ..."
-	cd vendor/phaser \
-		&& npm --loglevel=error install --ignore-scripts > /dev/null \
-		&& npm --loglevel=error install --ignore-scripts grunt-cli > /dev/null \
-		&& rm -rf dist/modules
+node_modules/pixi.js/: vendor/phaser/dist/phaser.js
+	echo "> Creating $@ ..."
+	cp vendor/phaser/dist/pixi.js $@/index.js
+	echo '{"main":"index.js"}' > $@/package.json
 	mkdir -p $@ && touch $@
 
 vendor/phaser/dist/phaser.js: vendor/phaser/dist/
@@ -44,17 +44,32 @@ vendor/phaser/dist/phaser.js: vendor/phaser/dist/
 			--exclude p2,video,ninja,gamepad,creature,net \
 			> /dev/null
 
-node_modules/phaser/: vendor/phaser/dist/phaser.js
-	echo "> Creating $@ ..."
-	mkdir -p $@
-	cp vendor/phaser/dist/phaser.js $@/index.js
-	echo '{"main":"index.js"}' > $@/package.json
+vendor/phaser/dist/: vendor/phaser/package.json
+	echo "> Installing vendor/phaser ..."
+	cd vendor/phaser \
+		&& npm --loglevel=error install --ignore-scripts > /dev/null \
+		&& npm --loglevel=error install --ignore-scripts grunt-cli > /dev/null \
+		&& rm -rf dist/modules
+	mkdir -p $@ && touch $@
 
-node_modules/pixi.js/: vendor/phaser/dist/phaser.js
+vendor/phaser/package.json:
+	echo "> Fetching vendor/phaser ..."
+	git submodule update --quiet --init vendor/phaser
+
+# -- devi-phaser
+node_modules/devi-phaser/: vendor/devi-phaser/build/index.js
 	echo "> Creating $@ ..."
-	mkdir -p $@
-	cp vendor/phaser/dist/pixi.js $@/index.js
-	echo '{"main":"index.js"}' > $@/package.json
+	cd node_modules && ln -s ../vendor/devi-phaser
+
+vendor/devi-phaser/build/index.js: vendor/devi-phaser/package.json
+	echo "> Building devi-phaser ..."
+	cd vendor/devi-phaser \
+		&& npm --loglevel=error install --ignore-scripts > /dev/null \
+		&& make build
+
+vendor/devi-phaser/package.json:
+	echo "> Fetching vendor/devi-phaser ..."
+	git submodule update --quiet --init vendor/devi-phaser
 
 #
 # BUILD

@@ -1,7 +1,7 @@
 import { State, Tilemap, Sprite } from 'phaser';
+import DeviLoader from 'devi-phaser';
 
 import { totalSections } from '../config';
-import DeviLoader from '../lib/devi-phaser';
 import gameJson from '../../game/game.json';
 
 class Example extends Sprite {

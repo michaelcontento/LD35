@@ -1,3 +1,6 @@
 [submodule "vendor/phaser"]
 	path = vendor/phaser
 	url = https://github.com/photonstorm/phaser.git
+[submodule "vendor/devi-phaser"]
+	path = vendor/devi-phaser
+	url = git@github.com:burningtreeio/devi-phaser.git
