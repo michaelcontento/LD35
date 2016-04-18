@@ -4,17 +4,6 @@ import DeviLoader from 'devi-phaser';
 import { totalSections } from '../config';
 import gameJson from '../../game/game.json';
 
-class Example extends Sprite {
-    constructor(...args) {
-        super(...args);
-
-        this.alpha = 0;
-        this.game.add
-            .tween(this)
-            .to({ alpha: 1 }, 2000, undefined, true);
-    }
-}
-
 export default class extends State {
     preload() {
         this.load.tilemap('start', 'maps/start.json', null, Tilemap.TILED_JSON);
@@ -36,14 +25,11 @@ export default class extends State {
         this.load.image('volcano', 'images/volcano.png');
         this.load.image('wifi', 'images/wifi.png');
 
-        const devi = new DeviLoader(this.game, 'game', gameJson);
+        const devi = new DeviLoader(this.game, gameJson);
         devi.preload();
     }
 
     create() {
-        const devi = new DeviLoader(this.game, 'game', gameJson);
-        devi.setClass('ship', Example);
-        devi.getRoot();
-        // this.state.start('Main');
+        this.state.start('Main');
     }
 }

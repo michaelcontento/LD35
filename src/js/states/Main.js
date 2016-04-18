@@ -1,11 +1,13 @@
 import { Camera, State, Text, Physics } from 'phaser';
+import DeviLoader from 'devi-phaser';
 
+import findClosestAttractor from '../lib/findClosestAttractor';
 import Attractor from '../models/Attractor';
 import Boat from '../models/Boat';
 import Obstacle from '../models/Obstacle';
 import * as Shapes from '../models/Shapes'
 import Treasure from '../models/Treasure';
-
+import gameJson from '../../game/game.json';
 
 const COLOUR_WATER = '#63D1F4';
 const COLOUR_WON = '#4CBB17';
@@ -13,23 +15,26 @@ const COLOUR_LOST = '#992D2D';
 
 export default class extends State {
     create() {
+        this.stage.backgroundColor = COLOUR_WATER;
         this.game.physics.startSystem(Physics.ARCADE);
         this.game.time.advancedTiming = true;
 
-        this.stage.backgroundColor = COLOUR_WATER;
+        const devi = new DeviLoader(this.game, gameJson);
+        devi.setClass('ship', Boat);
+        devi.setClass('section-*/shape-*', Attractor);
+        devi.setClass('section-*/obstacle-*', Obstacle);
+        devi.getRoot();
+
+        this.attractors = devi.get('section-*/shape-*');
+        this.obstacles = devi.get('section-*/obstacle-*');
+
+        this.boat = devi.get('ship')[0];
+        this.game.camera.follow(this.boat, Camera.FOLLOW_LOCKON);
 
         // add distance markers
         for (var i = 0; i < this.game.world.height; i += 100) {
             this.game.add.text(1, i, i, {fill: 'lightgray', fontSize: 16});
         }
-
-        let start_x = this.game.world.centerX;
-        let start_y = this.game.world.height * 0.9;
-        this.boat = this.game.add.existing(
-            new Boat(this.game, start_x, start_y, 'boat')
-        );
-
-        this.game.camera.follow(this.boat, Camera.FOLLOW_LOCKON);
 
         const finishLine = this.game.add.group();
         const left = this.game.add.sprite(0, 0, 'finishline');
@@ -43,22 +48,6 @@ export default class extends State {
         finishLine.setAll('scale.y', 0.33);
 
         // TODO this makes up the "level", refactor out?!
-        this.attractors = [
-            this.game.add.existing(
-                new Attractor(Shapes.SHAPE_CROSS, this.game, this.game.world.width * 0.1, 450)
-            ),
-            this.game.add.existing(
-                new Attractor(Shapes.SHAPE_CIRCLE, this.game, this.game.world.width * 0.9, 250)
-            ),
-        ]
-        this.obstacles = [
-            this.game.add.existing(
-                new Obstacle(this.game, this.game.world.centerX, 150, 'volcano')
-            ),
-            this.game.add.existing(
-                new Obstacle(this.game, this.game.world.centerX / 4, 150, 'volcano')
-            ),
-        ]
         this.treasures = [
             this.game.add.existing(
                 new Treasure(this.game, this.game.world.width * 0.7, 200, 'treasure')
@@ -98,38 +87,6 @@ export default class extends State {
         for (var i = 0; i < game.world.height; i += 100) {
             game.add.text(1, i, i, {fill: 'lightgray', fontSize: 16});
         }
-    }
-
-    _closestAttractor(boat, attractors) {
-        if (attractors.length == 0 ) {
-            return null;
-        }
-
-        const relevant = attractors.map(
-            (attractor) => (
-                { distance: boat.body.center.distance(attractor), attractor }
-            )
-        ).filter(
-            ({attractor}) => attractor.y < boat.y
-        ).filter(
-            ({attractor}) => attractor.shape === boat.shape
-        ).filter(
-            ({distance, attractor}) => distance < attractor.range
-        );
-
-        if (relevant.length == 0) {
-            return null;
-        } else if (relevant.length == 1) {
-            return relevant[0].attractor;
-        }
-
-        const sorted = attractors.sort(
-            ({distance: distA}, {distance: distB}) => distA - distB
-        ).map(
-            ({attractor}) => attractor
-        );
-
-        return sorted[0];
     }
 
     _GameOver(backgroundColor, message) {
@@ -188,7 +145,7 @@ export default class extends State {
             (attr) => attr.active = false
         );
 
-        const closestAttractor = this._closestAttractor(this.boat, this.attractors);
+        const closestAttractor = findClosestAttractor(this.boat, this.attractors);
 
         // TODO use/fix rotation
         if (closestAttractor) {
