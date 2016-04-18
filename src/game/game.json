@@ -2,7 +2,7 @@
     "devi": {
         "version": "1.0.0",
         "origin": "game.psd",
-        "updatedAt": "2016-04-17T19:56:48.452Z"
+        "updatedAt": "2016-04-18T10:45:47.101Z"
     },
     "properties": {},
     "children": [{
@@ -10,8 +10,8 @@
         "visible": true,
         "position": {
             "origin": "world",
-            "x": "105px",
-            "y": "139px"
+            "x": "237px",
+            "y": "206px"
         }
     }, {
         "objectId": "34",
@@ -23,7 +23,7 @@
         }
     }, {
         "objectId": "60",
-        "visible": false,
+        "visible": true,
         "position": {
             "origin": "world",
             "x": "0px",
@@ -56,7 +56,7 @@
                     "y": "42px"
                 }
             }],
-            "filename": "217-34.png",
+            "filename": "195-34.png",
             "id": "34"
         },
         "60": {
@@ -68,15 +68,15 @@
             },
             "properties": {},
             "children": [],
-            "filename": "217-60.png",
+            "filename": "195-60.png",
             "id": "60"
         },
         "81": {
             "type": "object",
             "name": "sections",
             "dimension": {
-                "width": "526px",
-                "height": "888px"
+                "width": "506px",
+                "height": "821px"
             },
             "properties": {},
             "children": [{
@@ -92,8 +92,8 @@
                 "visible": true,
                 "position": {
                     "origin": "parent",
-                    "x": "215px",
-                    "y": "766px"
+                    "x": "83px",
+                    "y": "699px"
                 }
             }],
             "id": "81"
@@ -107,64 +107,128 @@
             },
             "properties": {},
             "children": [],
-            "filename": "217-85.png",
+            "filename": "195-85.png",
             "id": "85"
         },
         "91": {
             "type": "object",
             "name": "section-2",
             "dimension": {
-                "width": "526px",
-                "height": "623px"
+                "width": "506px",
+                "height": "526px"
             },
             "properties": {},
             "children": [{
-                "objectId": "113",
+                "objectId": "155",
                 "visible": true,
                 "position": {
                     "origin": "parent",
-                    "x": "74px",
-                    "y": "16px"
+                    "x": "234px",
+                    "y": "201px"
                 }
             }, {
-                "objectId": "111",
+                "objectId": "156",
                 "visible": true,
                 "position": {
                     "origin": "parent",
-                    "x": "403px",
-                    "y": "280px"
+                    "x": "234px",
+                    "y": "321px"
+                }
+            }, {
+                "objectId": "154",
+                "visible": true,
+                "position": {
+                    "origin": "parent",
+                    "x": "234px",
+                    "y": "441px"
+                }
+            }, {
+                "objectId": "138",
+                "visible": true,
+                "position": {
+                    "origin": "parent",
+                    "x": "422px",
+                    "y": "393px"
                 }
             }, {
                 "objectId": "110",
                 "visible": true,
                 "position": {
                     "origin": "parent",
-                    "x": "0px",
-                    "y": "515px"
+                    "x": "422px",
+                    "y": "222px"
+                }
+            }, {
+                "objectId": "140",
+                "visible": true,
+                "position": {
+                    "origin": "parent",
+                    "x": "310px",
+                    "y": "402px"
+                }
+            }, {
+                "objectId": "139",
+                "visible": true,
+                "position": {
+                    "origin": "parent",
+                    "x": "310px",
+                    "y": "262px"
                 }
             }, {
                 "objectId": "109",
                 "visible": true,
                 "position": {
                     "origin": "parent",
-                    "x": "358px",
-                    "y": "0px"
+                    "x": "310px",
+                    "y": "132px"
+                }
+            }, {
+                "objectId": "113",
+                "visible": true,
+                "position": {
+                    "origin": "parent",
+                    "x": "0px",
+                    "y": "145px"
+                }
+            }, {
+                "objectId": "111",
+                "visible": true,
+                "position": {
+                    "origin": "parent",
+                    "x": "0px",
+                    "y": "316px"
+                }
+            }, {
+                "objectId": "150",
+                "visible": true,
+                "position": {
+                    "origin": "parent",
+                    "x": "86px",
+                    "y": "161px"
+                }
+            }, {
+                "objectId": "149",
+                "visible": true,
+                "position": {
+                    "origin": "parent",
+                    "x": "86px",
+                    "y": "271px"
                 }
             }, {
                 "objectId": "108",
                 "visible": true,
                 "position": {
                     "origin": "parent",
-                    "x": "277px",
-                    "y": "423px"
+                    "x": "86px",
+                    "y": "390px"
                 }
             }, {
                 "objectId": "107",
                 "visible": true,
                 "position": {
                     "origin": "parent",
-                    "x": "42px",
-                    "y": "172px"
+                    "x": "217px",
+                    "y": "0px"
                 }
             }],
             "id": "91"
@@ -178,7 +242,7 @@
             },
             "properties": {},
             "children": [],
-            "filename": "217-102.png",
+            "filename": "195-102.png",
             "id": "102"
         },
         "103": {
@@ -190,7 +254,7 @@
             },
             "properties": {},
             "children": [],
-            "filename": "217-103.png",
+            "filename": "195-103.png",
             "id": "103"
         },
         "107": {
@@ -202,46 +266,58 @@
             },
             "properties": {},
             "children": [],
-            "filename": "217-107.png",
+            "filename": "195-107.png",
             "id": "107"
         },
         "108": {
             "type": "sprite",
-            "name": "obstacle-2",
+            "name": "obstacle-2 b",
             "dimension": {
-                "width": "112px",
-                "height": "92px"
+                "width": "94px",
+                "height": "77px"
             },
             "properties": {},
             "children": [],
-            "filename": "217-108.png",
+            "filename": "195-108.png",
             "id": "108"
         },
         "109": {
             "type": "sprite",
-            "name": "obstacle-3",
+            "name": "obstacle-3 b",
             "dimension": {
-                "width": "168px",
-                "height": "186px"
+                "width": "112px",
+                "height": "124px"
             },
             "properties": {},
             "children": [],
-            "filename": "217-109.png",
+            "filename": "195-109.png",
             "id": "109"
         },
         "110": {
             "type": "sprite",
-            "name": "shape-1",
+            "name": "shape-1 a",
             "dimension": {
-                "width": "113px",
-                "height": "108px"
+                "width": "84px",
+                "height": "84px"
             },
             "properties": {},
             "children": [],
-            "filename": "217-110.png",
+            "filename": "195-110.png",
             "id": "110"
         },
         "111": {
+            "type": "sprite",
+            "name": "shape-2 a",
+            "dimension": {
+                "width": "78px",
+                "height": "77px"
+            },
+            "properties": {},
+            "children": [],
+            "filename": "195-111.png",
+            "id": "111"
+        },
+        "113": {
             "type": "sprite",
             "name": "shape-2",
             "dimension": {
@@ -250,20 +326,104 @@
             },
             "properties": {},
             "children": [],
-            "filename": "217-111.png",
-            "id": "111"
+            "filename": "195-113.png",
+            "id": "113"
         },
-        "113": {
+        "138": {
             "type": "sprite",
-            "name": "shape-3",
+            "name": "shape-1",
             "dimension": {
-                "width": "78px",
+                "width": "84px",
+                "height": "84px"
+            },
+            "properties": {},
+            "children": [],
+            "filename": "195-138.png",
+            "id": "138"
+        },
+        "139": {
+            "type": "sprite",
+            "name": "obstacle-3 a",
+            "dimension": {
+                "width": "112px",
+                "height": "124px"
+            },
+            "properties": {},
+            "children": [],
+            "filename": "195-139.png",
+            "id": "139"
+        },
+        "140": {
+            "type": "sprite",
+            "name": "obstacle-3",
+            "dimension": {
+                "width": "112px",
+                "height": "124px"
+            },
+            "properties": {},
+            "children": [],
+            "filename": "195-140.png",
+            "id": "140"
+        },
+        "149": {
+            "type": "sprite",
+            "name": "obstacle-2 a",
+            "dimension": {
+                "width": "94px",
                 "height": "77px"
             },
             "properties": {},
             "children": [],
-            "filename": "217-113.png",
-            "id": "113"
+            "filename": "195-149.png",
+            "id": "149"
+        },
+        "150": {
+            "type": "sprite",
+            "name": "obstacle-2",
+            "dimension": {
+                "width": "94px",
+                "height": "77px"
+            },
+            "properties": {},
+            "children": [],
+            "filename": "195-150.png",
+            "id": "150"
+        },
+        "154": {
+            "type": "sprite",
+            "name": "treasure-1 b",
+            "dimension": {
+                "width": "52px",
+                "height": "57px"
+            },
+            "properties": {},
+            "children": [],
+            "filename": "195-154.png",
+            "id": "154"
+        },
+        "155": {
+            "type": "sprite",
+            "name": "treasure-1",
+            "dimension": {
+                "width": "52px",
+                "height": "57px"
+            },
+            "properties": {},
+            "children": [],
+            "filename": "195-155.png",
+            "id": "155"
+        },
+        "156": {
+            "type": "sprite",
+            "name": "treasure-1 a",
+            "dimension": {
+                "width": "52px",
+                "height": "57px"
+            },
+            "properties": {},
+            "children": [],
+            "filename": "195-156.png",
+            "id": "156"
         }
     },
     "dimension": {

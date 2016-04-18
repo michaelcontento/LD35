@@ -23,10 +23,12 @@ export default class extends State {
         devi.setClass('ship', Boat);
         devi.setClass('section-*/shape-*', Attractor);
         devi.setClass('section-*/obstacle-*', Obstacle);
+        devi.setClass('section-*/treasure-*', Treasure);
         devi.getRoot();
 
         this.attractors = devi.get('section-*/shape-*');
         this.obstacles = devi.get('section-*/obstacle-*');
+        this.treasures = devi.get('section-*/treasure-*');
 
         this.boat = devi.get('ship')[0];
         this.game.camera.follow(this.boat, Camera.FOLLOW_LOCKON);
@@ -47,31 +49,15 @@ export default class extends State {
         finishLine.setAll('scale.x', 0.33);
         finishLine.setAll('scale.y', 0.33);
 
-        // TODO this makes up the "level", refactor out?!
-        this.treasures = [
-            this.game.add.existing(
-                new Treasure(this.game, this.game.world.width * 0.7, 200, 'treasure')
-            ),
-            this.game.add.existing(
-                new Treasure(this.game, this.game.world.centerX, 480, 'treasure')
-            ),
-        ]
-
+        // TODO: Move this into own class
         this.treasureCount = this.game.add.text(
             this.game.width * 0.75, this.game.height * 0.95, `${this.boat.treasure}`
         );
         this.treasureCount.anchor.setTo(0.5);
-
         const treasureCountSprite = this.game.add.sprite(50, 0, 'treasure');
         treasureCountSprite.scale.setTo(0.33);
         treasureCountSprite.anchor.setTo(0.5);
         this.treasureCount.addChild(treasureCountSprite);
-
-        this.helpText = this.game.add.text(
-            this.game.world.width * 0.1, this.game.world.height * 0.92,
-            'the shapes attract you!\ntap to shift active shape',
-            {align: 'left', fill: 'white', fontSize: 18},
-        );
 
         this.game.input.onTap.add(::this._toggleShape);
 
