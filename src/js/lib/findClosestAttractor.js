@@ -5,10 +5,10 @@ export default (boat, attractors) => {
 
     const relevant = attractors.map(
         (attractor) => (
-            { distance: boat.body.center.distance(attractor), attractor }
+            { distance: boat.worldPosition.distance(attractor.worldPosition), attractor }
         )
     ).filter(
-        ({attractor}) => attractor.y < boat.y
+        ({attractor}) => attractor.worldPosition.y < boat.worldPosition.y
     ).filter(
         ({attractor}) => attractor.shape === boat.shape
     ).filter(
