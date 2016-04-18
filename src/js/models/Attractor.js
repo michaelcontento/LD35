@@ -15,7 +15,7 @@ export default class Attractor extends Sprite {
     }
 
     create() {
-        if (this.name === 'shape-1') {
+        if (this.name === 'shape-2') {
             this.shape = Shapes.SHAPE_CROSS;
         } else {
             this.shape = Shapes.SHAPE_CIRCLE;
